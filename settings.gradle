@@ -29,6 +29,7 @@ include 'antlr'
 include 'ui'
 include 'openApi'
 include 'docs'
+include 'aspectj'
 
 rootProject.name = 'gradle'
 rootProject.children.each {project ->

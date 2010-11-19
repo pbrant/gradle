@@ -15,25 +15,8 @@
  */
 package org.gradle.build.docs.dsl;
 
-import java.io.Serializable;
+import org.w3c.dom.Node;
 
-public class PropertyMetaData implements Serializable {
-    private String type;
-    private boolean writeable;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean isWriteable() {
-        return writeable;
-    }
-
-    public void setWriteable(boolean writeable) {
-        this.writeable = writeable;
-    }
+public interface DocComment {
+    Iterable<? extends Node> getDocbook();
 }

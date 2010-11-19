@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.build.docs.dsl
+package org.gradle.build.docs.dsl;
 
-class ExtensionMetaData {
-    final String targetClass
-    final Set<Map<String, String>> extensionClasses = new HashSet()
+import org.gradle.build.docs.dsl.model.ClassMetaData;
 
-    ExtensionMetaData(String targetClass) {
-        this.targetClass = targetClass
+import java.util.Map;
+
+public class ClassMetaDataRepository {
+    private final Map<String, ClassMetaData> classes;
+
+    public ClassMetaDataRepository(Map<String, ClassMetaData> classes) {
+        this.classes = classes;
     }
-    
-    def void add(String plugin, String extensionClass) {
-        extensionClasses << [plugin: plugin, extensionClass: extensionClass]
+
+    ClassMetaData findClass(String fullyQualifiedName) {
+        return classes.get(fullyQualifiedName);
     }
 }

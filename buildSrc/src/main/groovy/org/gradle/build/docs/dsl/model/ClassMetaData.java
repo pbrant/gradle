@@ -13,24 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.build.docs.dsl;
+package org.gradle.build.docs.dsl.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ClassMetaData implements Serializable {
+    private final String className;
     private final String superClassName;
     private final boolean groovy;
+    private final String docComment;
+    private final List<String> imports;
     private final Map<String, PropertyMetaData> classProperties = new HashMap<String, PropertyMetaData>();
 
-    public ClassMetaData(String superClassName, boolean isGroovy) {
+    public ClassMetaData(String className, String superClassName, boolean isGroovy, String docComment, List<String> imports) {
+        this.className = className;
         this.superClassName = superClassName;
         groovy = isGroovy;
+        this.docComment = docComment;
+        this.imports = imports;
     }
 
     public Map<String, PropertyMetaData> getClassProperties() {
         return classProperties;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     public boolean isGroovy() {
@@ -41,12 +52,21 @@ public class ClassMetaData implements Serializable {
         return superClassName;
     }
 
-    public void addReadableProperty(String name, String type) {
-        PropertyMetaData property = getProperty(name);
-        property.setType(type);
+    public String getDocComment() {
+        return docComment;
     }
 
-    public void addWriteableProperty(String name, String type) {
+    public List<String> getImports() {
+        return imports;
+    }
+
+    public void addReadableProperty(String name, String type, String rawCommentText) {
+        PropertyMetaData property = getProperty(name);
+        property.setType(type);
+        property.setRawCommentText(rawCommentText);
+    }
+
+    public void addWriteableProperty(String name, String type, String rawCommentText) {
         PropertyMetaData property = getProperty(name);
         property.setWriteable(true);
     }
@@ -54,7 +74,7 @@ public class ClassMetaData implements Serializable {
     private PropertyMetaData getProperty(String name) {
         PropertyMetaData property = classProperties.get(name);
         if (property == null) {
-            property = new PropertyMetaData();
+            property = new PropertyMetaData(name);
             classProperties.put(name, property);
         }
         return property;

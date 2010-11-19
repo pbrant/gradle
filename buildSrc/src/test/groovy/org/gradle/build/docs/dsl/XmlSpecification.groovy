@@ -15,15 +15,21 @@
  */
 package org.gradle.build.docs.dsl
 
-class ExtensionMetaData {
-    final String targetClass
-    final Set<Map<String, String>> extensionClasses = new HashSet()
+import spock.lang.Specification
+import groovy.xml.dom.DOMUtil
+import org.w3c.dom.Document
+import javax.xml.parsers.DocumentBuilderFactory
+import org.w3c.dom.Node
 
-    ExtensionMetaData(String targetClass) {
-        this.targetClass = targetClass
+class XmlSpecification extends Specification {
+    final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
+
+    def format(Iterable<? extends Node> nodes) {
+        document.appendChild(document.createElement('root'))
+        nodes.each { node ->
+            document.documentElement.appendChild(node)
+        }
+        return DOMUtil.serialize(document.documentElement).replaceAll(System.getProperty('line.separator'), '\n')
     }
-    
-    def void add(String plugin, String extensionClass) {
-        extensionClasses << [plugin: plugin, extensionClass: extensionClass]
-    }
+
 }

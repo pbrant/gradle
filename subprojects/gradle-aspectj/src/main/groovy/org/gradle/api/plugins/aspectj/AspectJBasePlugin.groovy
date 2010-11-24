@@ -23,8 +23,10 @@ import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.aspectj.AspectJCompile;
+import org.gradle.plugins.eclipse.EclipseClasspath;
 import org.gradle.plugins.eclipse.EclipsePlugin;
 import org.gradle.plugins.eclipse.EclipseProject;
+import org.gradle.plugins.eclipse.model.BuildCommand;
 
 public class AspectJBasePlugin implements Plugin<Project> {
     // public configurations
@@ -72,8 +74,13 @@ public class AspectJBasePlugin implements Plugin<Project> {
     
     private void configureEclipseProject(Project project) {
         project.tasks.withType(EclipseProject.class).allTasks { EclipseProject eclipseProject -> 
-            eclipseProject.natures('org.eclipse.ajdt.ui.ajnature')
-            eclipseProject.buildCommand('org.eclipse.ajdt.core.ajbuilder')
+            project.configure(eclipseProject) {
+                natures.add(natures.indexOf("org.eclipse.jdt.core.javanature"), 'org.eclipse.ajdt.ui.ajnature')
+                
+                buildCommands = buildCommands.collect { command ->
+                    command.name == "org.eclipse.jdt.core.javabuilder" ? new BuildCommand('org.eclipse.ajdt.core.ajbuilder') : command
+                }
+            }
         }
     }
 }

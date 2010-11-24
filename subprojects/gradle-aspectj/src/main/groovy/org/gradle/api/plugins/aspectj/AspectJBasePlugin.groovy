@@ -23,6 +23,8 @@ import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.aspectj.AspectJCompile;
+import org.gradle.plugins.eclipse.EclipsePlugin;
+import org.gradle.plugins.eclipse.EclipseProject;
 
 public class AspectJBasePlugin implements Plugin<Project> {
     // public configurations
@@ -39,6 +41,7 @@ public class AspectJBasePlugin implements Plugin<Project> {
 
         configureCompileDefaults(project, javaPlugin)
         configureSourceSetDefaults(project, javaPlugin)
+        configureEclipseProject(project)
     }
 
     private void configureSourceSetDefaults(Project project, JavaBasePlugin javaPlugin) {
@@ -64,6 +67,13 @@ public class AspectJBasePlugin implements Plugin<Project> {
         project.tasks.withType(AspectJCompile.class).allTasks { AspectJCompile compile ->
             compile.compilerClasspath = project.configurations[ASPECTJ_TOOLS_CONFIGURATION_NAME]
             compile.aspectPath = project.configurations[ASPECTS_CONFIGURATION_NAME];
+        }
+    }
+    
+    private void configureEclipseProject(Project project) {
+        project.tasks.withType(EclipseProject.class).allTasks { EclipseProject eclipseProject -> 
+            eclipseProject.natures('org.eclipse.ajdt.ui.ajnature')
+            eclipseProject.buildCommand('org.eclipse.ajdt.core.ajbuilder')
         }
     }
 }

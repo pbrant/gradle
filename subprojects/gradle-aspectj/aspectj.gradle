@@ -18,6 +18,7 @@ dependencies {
 
     compile project(':core')
     compile project(':plugins')
+    compile project(':eclipse')
 
     testCompile project(path: ':core', configuration: 'testFixtures')
     testCompile project(path: ':plugins', configuration: 'testFixtures')
